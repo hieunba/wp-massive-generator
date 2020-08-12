@@ -31,14 +31,14 @@ check_docker() {
 }
 
 check_image() {
-  set -ex; docker inspect $docker_tag > /dev/null || {
+    docker inspect $docker_tag > /dev/null || {
     log_info_msg 'Building Docker image..'
     build_image
   }
 }
 
 build_image() {
-  set -ex; docker build -t $docker_tag .
+    docker build -t $docker_tag .
 }
 
 # __MAIN__
