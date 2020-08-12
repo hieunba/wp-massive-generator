@@ -72,7 +72,29 @@ build_image() {
     docker build $BUILD_OPTIONS -t $docker_tag .
 }
 
+create_container() {
+  local mli_container_id=
+
+  if [ "x${ENV,,}" == "xdev" ] ; then
+    set -ex;
+  fi
+  mli_container_id=$(docker create -it \
+                     --env ENV=$ENV \
+                     --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+                     --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+                     --env AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION \
+                     --env EC2_INSTANCE_TYPE=$EC2_INSTANCE_TYPE \
+                     --env EC2_KEYPAIR=$EC2_KEYPAIR \
+                     --env WP_HAS_CDN=$WP_HAS_CDN \
+                     --env WP_HAS_LB=$WP_HAS_LB \
+                     --env WP_SITEURL=$WP_SITEURL \
+                     --env WP_HOME=$WP_HOME \
+                     $docker_tag)
+  return $mli_container_id
+}
+
 # __MAIN__
 load_defaults
 check_docker
 check_image
+create_container
