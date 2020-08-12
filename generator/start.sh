@@ -59,8 +59,6 @@ check_docker() {
 
 check_image() {
     docker inspect $docker_tag > /dev/null || {
-    log_info_msg 'Building Docker image..'
-    build_image
   }
 }
 
@@ -112,7 +110,8 @@ load_defaults
 
 check_docker
 
-check_image
+log_info_msg 'Building Docker image..'
+build_image
 
 mli_container_id=$(create_container) || log_error_msg "Could not create a Docker container"
 
