@@ -57,11 +57,6 @@ check_docker() {
   command -v docker >/dev/null || log_error_msg 'Docker was not found'
 }
 
-check_image() {
-    docker inspect $docker_tag > /dev/null || {
-  }
-}
-
 build_image() {
     if [ "x${ENV,,}" == "xdebug" ] ; then
         local BUILD_OPTIONS="--rm"
