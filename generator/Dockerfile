@@ -7,7 +7,7 @@ ARG AWSCLI_VERSION
 ENV AWSCLI_VERSION ${AWSCLI_VERSION:-1.18.115}
 
 RUN set -ex; \
-    apk -uv add --no-cache git groff jq less bash
+    apk -uv add --no-cache git groff jq less bash ncurses
 
 RUN set -ex; \
     pip install awscli==$AWSCLI_VERSION
