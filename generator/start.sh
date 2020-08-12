@@ -1,6 +1,7 @@
 #!/bin/bash
 set -eou pipefail
 
+declare ENV=
 docker_tag=mli/generator
 
 banner() {
@@ -38,7 +39,12 @@ check_image() {
 }
 
 build_image() {
-    docker build -t $docker_tag .
+    if [ "x${ENV,,}" == "xdev" ] ; then
+        local BUILD_OPTIONS="--rm"
+    else
+        local BUILD_OPTIONS="--quiet --rm"
+    fi
+    docker build $BUILD_OPTIONS -t $docker_tag .
 }
 
 # __MAIN__
