@@ -27,4 +27,9 @@ COPY entrypoint.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
+COPY cmd.sh /cmd.sh
+
+RUN chmod +x /cmd.sh
+
 ENTRYPOINT ["entrypoint.sh"]
+CMD ["/cmd.sh"]
