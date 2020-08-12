@@ -39,7 +39,7 @@ load_defaults() {
   WP_SITEURL="${WP_SITEURL:-}"
   WP_HOME="${WP_HOME:-}"
 
-  if [ "x${ENV,,}" == "xdev" ] ; then
+  if [ "x${ENV,,}" == "xdebug" ] ; then
     log_info_msg "Defaults values"
     typeset -p AWS_DEFAULT_REGION \
                AWS_ACCESS_KEY_ID \
@@ -65,7 +65,7 @@ check_image() {
 }
 
 build_image() {
-    if [ "x${ENV,,}" == "xdev" ] ; then
+    if [ "x${ENV,,}" == "xdebug" ] ; then
         local BUILD_OPTIONS="--rm"
     else
         local BUILD_OPTIONS="--quiet --rm"
@@ -76,7 +76,7 @@ build_image() {
 create_container() {
   local mli_container_id=
 
-  if [ "x${ENV,,}" == "xdev" ] ; then
+  if [ "x${ENV,,}" == "xdebug" ] ; then
     set -ex;
   fi
   docker create -it \
@@ -90,11 +90,39 @@ create_container() {
                  --env WP_HAS_LB=$WP_HAS_LB \
                  --env WP_SITEURL=$WP_SITEURL \
                  --env WP_HOME=$WP_HOME \
-                 $docker_tag)
+                 $docker_tag
+}
+
+start_deployment() {
+  local id="$1"
+  if [ "x${ENV,,}" == "xdebug" ] ; then
+    set -ex;
+  fi
+  docker start -i -a $id
+}
+
+clean_docker() {
+  if [ "x${ENV,,}" == "xdebug" ] ; then
+    set -ex;
+  fi
 }
 
 # __MAIN__
 load_defaults
+
 check_docker
+
 check_image
-mli_container_id=$(create_container)
+
+mli_container_id=$(create_container) || log_error_msg "Could not create a Docker container"
+
+start_deployment $mli_container_id
+if [ $? -eq 0 ] ; then
+  log_info_msg "Cleaning up Docker environment."
+
+  clean_docker $mli_container_id
+
+  log_success_msg "Deployment completed successfully."
+else
+  log_error_msg "Deployment failed"
+fi
