@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eou pipefail
 
-declare ENV=
+declare ENV=${ENV:-}
 docker_tag=mli/generator
 
 banner() {
