@@ -102,7 +102,7 @@ resource "aws_lb" "wp-http" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.allow_web_alb.id]
-  subnets            = var.public_subnets
+  subnets            = module.vpc.public_subnets
 
   tags = {
     Name = "wp-stack"
