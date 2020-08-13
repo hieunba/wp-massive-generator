@@ -168,6 +168,7 @@ resource "aws_launch_configuration" "wp" {
   name_prefix   = var.prefix
   image_id      = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
+  key_name      = var.key_name == "" ? var.default_key_name : var.key_name
 
   security_groups = [aws_security_group.allow_web_vpc.id]
 

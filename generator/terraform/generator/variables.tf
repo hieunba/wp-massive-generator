@@ -63,3 +63,13 @@ variable "autoscale_min_size" {
   type = number
   default = 1
 }
+
+variable "default_key_name" {
+  type = string
+  default = "mli"
+}
+
+variable "key_name" {
+  type = string
+  default = ""
+}
