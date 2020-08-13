@@ -7,7 +7,7 @@ module "vpc" {
   name   = "wp-vpc"
   cidr   = var.cidr_block
 
-  azs             = var.azs[var.region]
+  azs             = var.azs[trimspace(var.region)]
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
 
