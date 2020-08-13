@@ -20,6 +20,22 @@ module "vpc" {
   }
 }
 
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
+  }
+
+  filter {
+    name = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical
+}
+
 resource "aws_security_group" "allow_ssh" {
   name        = "allow_ssh"
   description = "Allow SSH inbound traffic"
@@ -141,4 +157,44 @@ resource "aws_lb_listener" "wp-http" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.wp-http.arn
   }
+}
+
+resource "aws_placement_group" "wp" {
+  name     = "wp"
+  strategy = "spread"
+}
+
+resource "aws_launch_configuration" "wp" {
+  name_prefix   = var.prefix
+  image_id      = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type
+
+  security_groups = [aws_security_group.allow_web_vpc.id]
+
+  associate_public_ip_address = true
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_autoscaling_group" "wp" {
+  name_prefix               = var.prefix
+  max_size                  = var.autoscale_max_size
+  min_size                  = var.autoscale_min_size
+
+  health_check_grace_period = 300
+  health_check_type         = "ELB"
+
+  placement_group           = aws_placement_group.wp.id
+
+  launch_configuration      = aws_launch_configuration.wp.name
+
+  vpc_zone_identifier       = module.vpc.public_subnets
+  target_group_arns         = [aws_lb_target_group.wp-http.arn]
+
+  force_delete              = false
+  termination_policies      = ["OldestInstance"]
+
+  wait_for_capacity_timeout = "10m"
 }

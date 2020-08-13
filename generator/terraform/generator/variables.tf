@@ -3,6 +3,11 @@ variable "region" {
   default = ""
 }
 
+variable "prefix" {
+  type = string
+  default = "wp-"
+}
+
 variable "cidr_block" {
   type = string
   default = "10.0.0.0/16"
@@ -42,4 +47,19 @@ variable "enable_nat_gateway" {
 variable "enable_vpn_gateway" {
   type = bool
   default = false
+}
+
+variable "instance_type" {
+  type = string
+  default = "t3.small"
+}
+
+variable "autoscale_max_size" {
+  type = number
+  default = 3
+}
+
+variable "autoscale_min_size" {
+  type = number
+  default = 1
 }
