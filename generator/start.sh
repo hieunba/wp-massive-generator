@@ -94,10 +94,23 @@ start_deployment() {
   docker start -i -a $id
 }
 
+stop_container() {
+  local id="$1"
+  docker stop $id
+}
+
+remove_container() {
+  local id="$1"
+  docker rm $id
+}
+
 clean_docker() {
+  local id="$1"
   if [ "x${ENV,,}" == "xdebug" ] ; then
     set -ex;
   fi
+  stop_container $id
+  remove_container $id
 }
 
 # __MAIN__
