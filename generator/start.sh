@@ -123,13 +123,14 @@ build_image
 
 mli_container_id=$(create_container) || log_error_msg "Could not create a Docker container"
 
-start_deployment $mli_container_id
-if [ $? -eq 0 ] ; then
+start_deployment $mli_container_id || error_code=$?
+
+if [ $error_code ] ; then
+  log_error_msg "Deployment failed"
+else
   log_info_msg "Cleaning up Docker environment."
 
   clean_docker $mli_container_id
 
   log_success_msg "Deployment completed successfully."
-else
-  log_error_msg "Deployment failed"
 fi
