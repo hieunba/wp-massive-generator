@@ -125,12 +125,12 @@ mli_container_id=$(create_container) || log_error_msg "Could not create a Docker
 
 start_deployment $mli_container_id || error_code=$?
 
+log_info_msg "Cleaning up Docker environment."
+clean_docker $mli_container_id
+
 if [ $error_code ] ; then
   log_error_msg "Deployment failed"
 else
-  log_info_msg "Cleaning up Docker environment."
-
-  clean_docker $mli_container_id
-
   log_success_msg "Deployment completed successfully."
 fi
+
