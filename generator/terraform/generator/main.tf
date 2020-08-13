@@ -67,3 +67,32 @@ resource "aws_security_group" "allow_web_alb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_security_group" "allow_web_vpc" {
+  name        = "allow_web_vpc"
+  description = "Allow web inbound traffic from Load Balancer to EC2 instances"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    from_port       = 443
+    to_port         = 443
+    protocol        = 6
+    security_groups = [aws_security_group.allow_web_alb.id]
+    self            = true
+  }
+
+  ingress {
+    from_port       = 80
+    to_port         = 80
+    protocol        = 6
+    security_groups = [aws_security_group.allow_web_alb.id]
+    self            = true
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
