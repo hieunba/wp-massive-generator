@@ -177,6 +177,8 @@ resource "aws_launch_configuration" "wp" {
   lifecycle {
     create_before_destroy = true
   }
+
+  user_data = file("scripts/bootstrap/provisioner.sh")
 }
 
 resource "aws_autoscaling_group" "wp" {
