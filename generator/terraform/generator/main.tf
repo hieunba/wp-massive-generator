@@ -256,11 +256,17 @@ resource "aws_db_instance" "wp" {
   parameter_group_name    = aws_db_parameter_group.wp.name
   backup_retention_period = 7
 
+  db_subnet_group_name    = aws_db_subnet_group.wp.id
   vpc_security_group_ids  = [aws_security_group.allow_db_vpc.id]
 
   enabled_cloudwatch_logs_exports = ["error", "slowquery"]
 
   apply_immediately = true
+}
+
+resource "aws_db_subnet_group" "wp" {
+  name       = "wp"
+  subnet_ids = module.vpc.public_subnets
 }
 
 resource "aws_db_parameter_group" "wp" {
