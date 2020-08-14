@@ -44,7 +44,9 @@ restart_apache2() {
   sudo systemctl restart apache2
 }
 
-pkgs=(apache2 libapache2-mod-php7.4 php7.4-mysql php7.4-cli php7.4-json)
+pkgs=(apache2 libapache2-mod-php7.4 php7.4-mysql php7.4-cli php7.4-json php7.4-gd \
+       php7.4-xml php7.4-imap php7.4-mbstring php7.4-intl \
+       php-getid3 php-mail)
 
 update_apt
 
