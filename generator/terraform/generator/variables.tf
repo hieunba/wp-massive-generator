@@ -76,7 +76,7 @@ variable "key_name" {
 
 variable "db_instance_class" {
   type = string
-  default = "t3.small"
+  default = "db.t3.small"
 }
 
 variable "default_username" {
