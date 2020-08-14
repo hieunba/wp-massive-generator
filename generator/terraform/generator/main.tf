@@ -250,7 +250,7 @@ resource "aws_db_instance" "wp" {
   engine_version          = "5.7"
   instance_class          = var.db_instance_class
   username                = var.default_username
-  password                = var.defautl_password
+  password                = var.default_password
   publicly_accessible     = var.db_publicly_accessible
   skip_final_snapshot     = var.db_skip_final_snapshot
   parameter_group_name    = aws_db_parameter_group.wp.name
