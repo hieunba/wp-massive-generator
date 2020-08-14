@@ -67,4 +67,20 @@ if [ ! -e /var/www/html/index.php ] && [ ! -e /var/www/html/wp-includes/version.
   rm wordpress.tar.gz
 
   sudo chown -R www-data: /var/www/html/
+
+  if [ ! -e /var/www/html/.htaccess ] ; then
+    sudo tee /var/www/html/.htaccess >/dev/null <<-HTACCESS
+    # BEGIN WordPress
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.php$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.php [L]
+</IfModule>
+    # END WordPress
+HTACCESS
+    sudo chown www-data: /var/www/html/.htaccess
+  fi
 fi
