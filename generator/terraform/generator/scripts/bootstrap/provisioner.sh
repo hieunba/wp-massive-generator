@@ -36,6 +36,14 @@ configure_apache2() {
   sudo a2enmod remoteip
 }
 
+reload_apache2() {
+  sudo systemctl reload apache2
+}
+
+restart_apache2() {
+  sudo systemctl restart apache2
+}
+
 pkgs=(apache2 libapache2-mod-php7.4 php7.4-mysql php7.4-cli php7.4-json)
 
 update_apt
