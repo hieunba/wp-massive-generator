@@ -113,6 +113,27 @@ resource "aws_security_group" "allow_web_vpc" {
   }
 }
 
+resource "aws_security_group" "allow_db_vpc" {
+  name        = "allow_db_vpc"
+  description = "Allow MySQL inbound traffic between VPC"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    from_port       = 3306
+    to_port         = 3306
+    protocol        = 6
+    security_groups = [aws_security_group.allow_web_vpc.id]
+    self            = true
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_lb" "wp-http" {
   name               = "wp-http"
   internal           = false
@@ -216,5 +237,43 @@ resource "aws_autoscaling_policy" "wp" {
     }
 
     target_value = 60
+  }
+}
+
+resource "aws_db_instance" "wp" {
+  identifier_prefix       = var.prefix
+  name                    = "wordpress"
+  storage_type            = "gp2"
+  allocated_storage       = 50
+  max_allocated_storage   = 100
+  engine                  = "mysql"
+  engine_version          = "5.7"
+  instance_class          = var.db_instance_class
+  username                = var.default_username
+  password                = var.defautl_password
+  publicly_accessible     = var.db_publicly_accessible
+  skip_final_snapshot     = var.db_skip_final_snapshot
+  parameter_group_name    = aws_db_parameter_group.wp.name
+  backup_retention_period = 7
+
+  vpc_security_group_ids  = [aws_security_group.allow_db_vpc.id]
+
+  enabled_cloudwatch_logs_exports = ["error", "slowquery"]
+
+  apply_immediately = true
+}
+
+resource "aws_db_parameter_group" "wp" {
+  name   = "wp"
+  family = "mysql5.7"
+
+  parameter {
+    name = "max_allowed_packet"
+    value = 268435456
+  }
+
+  parameter {
+    name = "slow_query_log"
+    value = 1
   }
 }

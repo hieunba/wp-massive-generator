@@ -73,3 +73,28 @@ variable "key_name" {
   type = string
   default = ""
 }
+
+variable "db_instance_class" {
+  type = string
+  default = "t3.small"
+}
+
+variable "default_username" {
+  type = string
+  default = "wp-user"
+}
+
+variable "default_password" {
+  type = string
+  default = "wordPress"
+}
+
+variable "db_publicly_accessible" {
+  type = bool
+  default = false
+}
+
+variable "db_skip_final_snapshot" {
+  type = bool
+  default = false
+}
