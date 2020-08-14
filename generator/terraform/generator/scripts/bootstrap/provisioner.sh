@@ -53,6 +53,7 @@ for pkg in ${pkgs[@]}; do
 done
 
 configure_apache2
+reload_apache2
 
 [ -f /var/www/html/index.html ] && sudo rm -f /var/www/html/index.html
 
