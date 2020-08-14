@@ -81,7 +81,7 @@ variable "db_instance_class" {
 
 variable "default_username" {
   type = string
-  default = "wp-user"
+  default = "wpuser"
 }
 
 variable "default_password" {
