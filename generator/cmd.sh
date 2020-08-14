@@ -23,6 +23,3 @@ log_error_msg() {
   exit 1
 }
 
-if [ "$AWS_DEFAULT_REGION" ] ; then
-  export TF_VAR_region=$AWS_DEFAULT_REGION
-fi
