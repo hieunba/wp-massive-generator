@@ -60,7 +60,7 @@ reload_apache2
 [ -f /var/www/html/index.html ] && sudo rm -f /var/www/html/index.html
 
 if [ ! -e /var/www/html/index.php ] && [ ! -e /var/www/html/wp-includes/version.php ] ; then
-  echo "WordPress not found in /var/www/html - copying now..."
+  log_info_msg "WordPress not found in /var/www/html - copying now..."
   curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"
   echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -
   sudo tar xzf wordpress.tar.gz --strip-components=1 -C /var/www/html
