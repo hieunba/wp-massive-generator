@@ -265,12 +265,12 @@ resource "aws_db_instance" "wp" {
 }
 
 resource "aws_db_subnet_group" "wp" {
-  name       = "wp"
+  name_prefix   = var.prefix
   subnet_ids = module.vpc.public_subnets
 }
 
 resource "aws_db_parameter_group" "wp" {
-  name   = "wp"
+  name_prefix   = var.prefix
   family = "mysql5.7"
 
   parameter {
