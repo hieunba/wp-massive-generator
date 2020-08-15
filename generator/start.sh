@@ -40,19 +40,20 @@ load_defaults() {
   WP_SITEURL="${WP_SITEURL:-}"
   WP_HOME="${WP_HOME:-}"
 
+  log_info_msg "Defaults values"
   if [ "x${ENV,,}" == "xdebug" ] ; then
-    log_info_msg "Defaults values"
-    typeset -p AWS_DEFAULT_REGION \
-               AWS_ACCESS_KEY_ID \
+    typeset -p AWS_ACCESS_KEY_ID \
                AWS_SECRET_ACCESS_KEY \
-               EC2_INSTANCE_TYPE \
-	       EC2_INSTANCE_NO \
-               EC2_KEYPAIR \
-               WP_HAS_CDN \
-               WP_HAS_LB \
-               WP_SITEURL \
-               WP_HOME
   fi
+
+  typeset -p AWS_DEFAULT_REGION \
+             EC2_INSTANCE_TYPE \
+	     EC2_INSTANCE_NO \
+             EC2_KEYPAIR \
+             WP_HAS_CDN \
+             WP_HAS_LB \
+             WP_SITEURL \
+             WP_HOME
 }
 
 validate_region() {
