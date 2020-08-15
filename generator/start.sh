@@ -110,7 +110,6 @@ clean_docker() {
     set -ex;
   fi
   stop_container $id
-  remove_container $id
 }
 
 # __MAIN__
