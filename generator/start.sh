@@ -53,6 +53,62 @@ load_defaults() {
   fi
 }
 
+validate_region() {
+    if [[ ! $1 =~ [a-z]+-[a-z]+-[0-9]$ ]] ; then
+       log_error_msg "Region was invalid: ${1}"
+    fi
+}
+
+validate_instance_type() {
+    if [[ ! $1 =~ [tamcrpgifdh][1-5][a-z]?\.[a-z]+$ ]] ; then
+       log_error_msg "Select instance type was invalid: ${1}"
+    fi
+}
+
+check_parameters() {
+  if [ -z "${1:-}" ] ; then
+    log_error_msg "Requires additional input"
+  elif [ "${1:0:1}" = "-" ] ; then
+    log_error_msg "Invalid argument: ${1}"
+  fi
+}
+
+while (( "$#" )) ; do
+  case $1 in
+    --access-key|--key|-k)
+      shift 1
+      check_parameters "$1"
+      AWS_ACCESS_KEY_ID="$1"
+      ;;
+    --secret-key|--secret|-s)
+      shift 1
+      check_parameters "$1"
+      AWS_SECRET_ACCESS_KEY="$1"
+      ;;
+    --region|-r)
+      shift 1
+      check_parameters "$1"
+      validate_region "$1"
+      AWS_DEFAULT_REGION="$1"
+      ;;
+    --instance-type|-t)
+      shift 1
+      check_parameters "$1"
+      validate_instance_type "$1"
+      EC2_INSTANCE_TYPE="$1"
+      ;;
+    --siteurl|--url)
+      shift 1
+      check_parameters "$1"
+      WP_SITE="$1"
+      ;;
+    *)
+      log_error_msg "Unknown parameter: ${1}"
+      ;;
+  esac
+  shift 1
+done
+
 check_docker() {
   command -v docker >/dev/null || log_error_msg 'Docker was not found'
 }
