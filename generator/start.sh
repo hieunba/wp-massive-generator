@@ -178,7 +178,7 @@ while (( "$#" )) ; do
     --siteurl|--url)
       shift 1
       check_parameters "$1"
-      WP_SITE="$1"
+      WP_SITEURL="$1"
       ;;
     *)
       log_error_msg "Unknown parameter: ${1}"
