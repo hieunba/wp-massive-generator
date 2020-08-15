@@ -43,7 +43,7 @@ load_defaults() {
   log_info_msg "Defaults values"
   if [ "x${ENV,,}" == "xdebug" ] ; then
     typeset -p AWS_ACCESS_KEY_ID \
-               AWS_SECRET_ACCESS_KEY \
+               AWS_SECRET_ACCESS_KEY
   fi
 
   typeset -p AWS_DEFAULT_REGION \
