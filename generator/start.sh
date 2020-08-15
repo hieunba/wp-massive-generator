@@ -33,6 +33,7 @@ load_defaults() {
   AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID:-}"
   AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY:-}"
   EC2_INSTANCE_TYPE="${EC2_INSTANCE_TYPE:-t2.small}"
+  EC2_INSTANCE_NO="${EC2_INSTANCE_NO}:-1"
   EC2_KEYPAIR="${EC2_KEYPAIR:-mli}"
   WP_HAS_CDN="${WP_HAS_CDN:-false}"
   WP_HAS_LB="${WP_HAS_LB:-false}"
@@ -45,6 +46,7 @@ load_defaults() {
                AWS_ACCESS_KEY_ID \
                AWS_SECRET_ACCESS_KEY \
                EC2_INSTANCE_TYPE \
+	       EC2_INSTANCE_NO \
                EC2_KEYPAIR \
                WP_HAS_CDN \
                WP_HAS_LB \
@@ -57,6 +59,12 @@ validate_region() {
     if [[ ! $1 =~ [a-z]+-[a-z]+-[0-9]$ ]] ; then
        log_error_msg "Region was invalid: ${1}"
     fi
+}
+
+validate_instance_no() {
+  if [[ ! $1 =~ [1-9][0-9]$ ]] ; then
+    log_error_msg "Selected number of instances was invalid: ${1}"
+  fi
 }
 
 validate_instance_type() {
@@ -97,6 +105,12 @@ while (( "$#" )) ; do
       validate_instance_type "$1"
       EC2_INSTANCE_TYPE="$1"
       ;;
+    --instance-no|-n)
+      shift 1
+      check_parameters "$1"
+      validate_instance_no "$1"
+      EC2_INSTANCE_NO="$1"
+      ;;
     --siteurl|--url)
       shift 1
       check_parameters "$1"
@@ -134,6 +148,7 @@ create_container() {
                  --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
                  --env AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION \
                  --env EC2_INSTANCE_TYPE=$EC2_INSTANCE_TYPE \
+		 --env EC2_INSTANCE_NO=$EC2_INSTANCE_NO \
                  --env EC2_KEYPAIR=$EC2_KEYPAIR \
                  --env WP_HAS_CDN=$WP_HAS_CDN \
                  --env WP_HAS_LB=$WP_HAS_LB \
