@@ -62,7 +62,7 @@ validate_region() {
 }
 
 validate_instance_no() {
-  if [[ ! $1 =~ [1-9][0-9]$ ]] ; then
+  if [[ ! $1 =~ [0-9]+$ ]] ; then
     log_error_msg "Selected number of instances was invalid: ${1}"
   fi
 }
