@@ -81,48 +81,6 @@ check_parameters() {
   fi
 }
 
-while (( "$#" )) ; do
-  case $1 in
-    --access-key|--key|-k)
-      shift 1
-      check_parameters "$1"
-      AWS_ACCESS_KEY_ID="$1"
-      ;;
-    --secret-key|--secret|-s)
-      shift 1
-      check_parameters "$1"
-      AWS_SECRET_ACCESS_KEY="$1"
-      ;;
-    --region|-r)
-      shift 1
-      check_parameters "$1"
-      validate_region "$1"
-      AWS_DEFAULT_REGION="$1"
-      ;;
-    --instance-type|-t)
-      shift 1
-      check_parameters "$1"
-      validate_instance_type "$1"
-      EC2_INSTANCE_TYPE="$1"
-      ;;
-    --instance-no|-n)
-      shift 1
-      check_parameters "$1"
-      validate_instance_no "$1"
-      EC2_INSTANCE_NO="$1"
-      ;;
-    --siteurl|--url)
-      shift 1
-      check_parameters "$1"
-      WP_SITE="$1"
-      ;;
-    *)
-      log_error_msg "Unknown parameter: ${1}"
-      ;;
-  esac
-  shift 1
-done
-
 check_docker() {
   command -v docker >/dev/null || log_error_msg 'Docker was not found'
 }
@@ -185,6 +143,48 @@ clean_docker() {
 
 # __MAIN__
 load_defaults
+
+while (( "$#" )) ; do
+  case $1 in
+    --access-key|--key|-k)
+      shift 1
+      check_parameters "$1"
+      AWS_ACCESS_KEY_ID="$1"
+      ;;
+    --secret-key|--secret|-s)
+      shift 1
+      check_parameters "$1"
+      AWS_SECRET_ACCESS_KEY="$1"
+      ;;
+    --region|-r)
+      shift 1
+      check_parameters "$1"
+      validate_region "$1"
+      AWS_DEFAULT_REGION="$1"
+      ;;
+    --instance-type|-t)
+      shift 1
+      check_parameters "$1"
+      validate_instance_type "$1"
+      EC2_INSTANCE_TYPE="$1"
+      ;;
+    --instance-no|-n)
+      shift 1
+      check_parameters "$1"
+      validate_instance_no "$1"
+      EC2_INSTANCE_NO="$1"
+      ;;
+    --siteurl|--url)
+      shift 1
+      check_parameters "$1"
+      WP_SITE="$1"
+      ;;
+    *)
+      log_error_msg "Unknown parameter: ${1}"
+      ;;
+  esac
+  shift 1
+done
 
 check_docker
 
