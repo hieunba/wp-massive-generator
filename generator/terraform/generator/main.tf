@@ -310,7 +310,15 @@ resource "aws_cloudfront_distribution" "wp_distribution" {
       query_string = false
 
       cookies {
-        forward = "none"
+        forward           = "whitelist"
+        whitelisted_names = [
+          "comment_author_*",
+          "comment_author_email_*",
+          "comment_author_url_*",
+          "wordpress_logged_in_*",
+          "wordpress_test_cookie",
+          "wp-settings-*"
+        ]
       }
     }
 
