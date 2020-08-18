@@ -38,6 +38,22 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
+resource "tls_private_key" "local" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "local_file" "ssh_private_key" {
+  sensitive_content = tls_private_key.local.private_key_pem
+  filename          = "${var.prefix}-local.pem"
+  file_permission   = 0400
+}
+
+resource "aws_key_pair" "wp" {
+  key_name_prefix   = var.prefix
+  public_key        = tls_private_key.local.public_key_openssh
+}
+
 resource "aws_security_group" "allow_ssh" {
   name        = "allow_ssh"
   description = "Allow SSH inbound traffic"
@@ -198,7 +214,7 @@ resource "aws_launch_configuration" "wp" {
   name_prefix   = var.prefix
   image_id      = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
-  key_name      = var.key_name == "" ? var.default_key_name : var.key_name
+  key_name      = aws_key_pair.wp.key_name
 
   security_groups = [aws_security_group.allow_web_vpc.id, aws_security_group.allow_ssh.id]
 
