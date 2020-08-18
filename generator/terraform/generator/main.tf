@@ -225,6 +225,8 @@ resource "aws_launch_configuration" "wp" {
   }
 
   user_data = file("scripts/bootstrap/provisioner.sh")
+
+  depends_on = [local_file.provisioner]
 }
 
 resource "aws_autoscaling_group" "wp" {
@@ -391,4 +393,17 @@ resource "aws_efs_mount_target" "beta" {
   file_system_id = aws_efs_file_system.wp.id
   subnet_id      = module.vpc.public_subnets[1]
   security_groups = [aws_security_group.allow_web_vpc.id]
+}
+
+data "template_file" "provisioner" {
+  template  = "${file("${path.module}/templates/provisioner.tpl")}"
+  vars = {
+    efs_mount_dir    = "/efs_root"
+    efs_mount_target = aws_efs_file_system.wp.dns_name
+  }
+}
+
+resource "local_file" "provisioner" {
+  content  = data.template_file.provisioner.rendered
+  filename = "${path.module}/scripts/bootstrap/provisioner.sh"
 }
