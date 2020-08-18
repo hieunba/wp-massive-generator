@@ -50,6 +50,8 @@ pkgs=(apache2 libapache2-mod-php7.4 php7.4-mysql php7.4-cli php7.4-json php7.4-g
 
 update_apt
 
+install_package "nfs-common"
+
 for pkg in ${pkgs[@]}; do
   install_package $pkg
 done
