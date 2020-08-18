@@ -291,7 +291,7 @@ resource "aws_db_instance" "wp" {
 
   apply_immediately = true
 
-  final_snapshot_identifier = "${var.prefix}-final-snapshot-${formdate("MMDDYYYYhhmm", "${timestamp()}")}"
+  final_snapshot_identifier = "${var.prefix}final-snapshot-${formatdate("MMDDYYYYhhmm", "${timestamp()}")}"
 }
 
 resource "aws_db_subnet_group" "wp" {
