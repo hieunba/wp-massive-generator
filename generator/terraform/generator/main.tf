@@ -347,3 +347,23 @@ resource "aws_cloudfront_distribution" "wp_distribution" {
 
   depends_on = [aws_lb.wp-http]
 }
+
+resource "aws_efs_file_system" "wp" {
+  creation_token = "wp-application"
+
+  tags = {
+    Name = "WP"
+  }
+}
+
+resource "aws_efs_mount_target" "alpha" {
+  file_system_id  = aws_efs_file_system.wp.id
+  subnet_id       = module.vpc.public_subnets[0]
+  security_groups = [aws_security_group.allow_web_vpc.id]
+}
+
+resource "aws_efs_mount_target" "beta" {
+  file_system_id = aws_efs_file_system.wp.id
+  subnet_id      = module.vpc.public_subnets[1]
+  security_groups = [aws_security_group.allow_web_vpc.id]
+}
