@@ -79,7 +79,9 @@ update_apt
 
 install_package "nfs-common"
 
-install_package $pkgs
+for pkg in $pkgs; do
+  install_package $pkg
+done
 
 configure_apache2
 reload_apache2
