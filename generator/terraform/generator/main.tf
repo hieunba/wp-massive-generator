@@ -15,6 +15,8 @@ module "vpc" {
   enable_nat_gateway = var.enable_nat_gateway
   enable_vpn_gateway = var.enable_vpn_gateway
 
+  enable_dns_hostnames = true
+
   tags = {
     Generator = "true"
   }
