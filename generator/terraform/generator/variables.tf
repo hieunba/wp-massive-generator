@@ -98,3 +98,8 @@ variable "db_skip_final_snapshot" {
   type = bool
   default = false
 }
+
+variable "wp_siteurl" {
+  type = string
+  default = ""
+}
