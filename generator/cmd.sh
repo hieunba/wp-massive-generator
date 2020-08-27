@@ -23,3 +23,16 @@ log_error_msg() {
   exit 1
 }
 
+get_account_id() {
+  aws sts get-caller-identity --query "Account" --output text
+}
+
+# _MAIN_
+
+AWS_VERIFY_RESULT="$(get_account_id)"
+
+if [[ $AWS_VERIFY_RESULT =~ ^[0-9]+$ ]] ; then
+  log_info_msg "Valid AWS Access Keys validated!"
+else
+  log_error_msg $AWS_VERIFY_RESULT
+fi
